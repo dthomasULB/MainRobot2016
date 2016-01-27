@@ -1,0 +1,68 @@
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# =========================
+# Operating System Files
+# =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+*.o
+LogicMainRobot.X/build/default/debug/basicActions.o.d
+*.d
+LogicMainRobot.X/dist/default/debug/bulbotpiclogique2011.debug.map
+*.elf
+LogicMainRobot.X/dist/default/production/bulbotpiclogique2011.production.map
+*.hex
+*.mk
+LogicMainRobot.X/nbproject/Makefile-genesis.properties
+*.bash
+LogicMainRobot.X/nbproject/private/configurations.xml
+LogicMainRobot.X/nbproject/private/private.xml
+LogicMainRobot.X/nbproject/private/SuppressibleMessageMemo.properties
+*.i
+PropDC.X/build/default/production/canFnc.s
+*.s
+PropDC.X/disassembly/listing.disasm
+*.map
+PropDC.X/nbproject/Makefile-genesis.properties
+PropDC.X/nbproject/private/private.xml
+PropDC.X/prop2015 state machine.zargo
