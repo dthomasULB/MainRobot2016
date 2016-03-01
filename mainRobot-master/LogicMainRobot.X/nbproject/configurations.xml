@@ -25,7 +25,6 @@
       <itemPath>gestionPropulsion.h</itemPath>
       <itemPath>Globals.h</itemPath>
       <itemPath>basicActions.h</itemPath>
-      <itemPath>servoClap.h</itemPath>
       <itemPath>sharp.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -54,7 +53,6 @@
       <itemPath>gestionActions.c</itemPath>
       <itemPath>gestionPropulsion.c</itemPath>
       <itemPath>basicActions.c</itemPath>
-      <itemPath>servoClap.c</itemPath>
       <itemPath>sharp.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -211,6 +209,7 @@
         <property key="DAC 1" value="true"/>
         <property key="DUAL COMPARATOR" value="true"/>
         <property key="ECAN" value="true"/>
+        <property key="Freeze All Other Peripherals" value="true"/>
         <property key="I2C1" value="true"/>
         <property key="INPUT CAPTURE 1" value="true"/>
         <property key="INPUT CAPTURE 2" value="true"/>

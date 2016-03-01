@@ -18,15 +18,44 @@ infoActionType noActionFct(int option) {
 
 
 int compareXYAlpha(positionInteger pos1, positionInteger pos2) {
-    return ((ABS(pos1.x - pos2.x) < 20) && (ABS(pos1.y - pos2.y) < 20) && (ABS(pos1.alpha - pos2.alpha) < 20E-3));  // 20E-3 = 1°
+    int tmp;
+    tmp = pos1.alpha - pos2.alpha;
+    while (tmp > 1800)  tmp -= 3600;
+    while(tmp < -1800)  tmp += 3600;
+    return ((ABS(pos1.x - pos2.x) < 20) && (ABS(pos1.y - pos2.y) < 20) && (ABS(tmp) < 30));  // 20E-3 = 1°
 }
 
 int compareXY(positionInteger pos1, positionInteger pos2) {
     return ((ABS(pos1.x - pos2.x) < 20) && (ABS(pos1.y - pos2.y) < 20));
 }
+infoActionType StopNowFct(){
+    infoActionType infoAction = {ACTION_PAS_COMMENCEE, 0, 0, ACTION_TRAJECTOIRE,{0, 0, 0}};
+        static enum {
+        ENVOI_ORDRE = 0,
+        ATTENTE_FIN_MOUVEMENT = 2,
+        FINI = 3
+    } etape = ENVOI_ORDRE;
+
+    switch(etape){
+        case ENVOI_ORDRE:
+            propulsionStopNow();
+            etape = ATTENTE_FIN_MOUVEMENT;
+            break;
+        case ATTENTE_FIN_MOUVEMENT:
+        if (propulsionGetStatus() == STANDING) {    // on attend que le mouvement soit fini
+                etape = FINI;
+           }
+            break;
+        case FINI:
+            infoAction.statut = ACTION_FINIE;
+            break;
+    }
+    return(infoAction);
+}
 
 actionStatutType trajectoryBasicAction(positionInteger destination) {
-    actionStatutType statutAction = ACTION_FINIE;
+    actionStatutType statutAction = ACTION_EN_COURS;
+    positionInteger RESET = {-1,-1,-1};
     static enum {
         ENVOI_ORDRE = 0,
         ATTENTE_ACQUITTEMENT = 1,
@@ -34,7 +63,12 @@ actionStatutType trajectoryBasicAction(positionInteger destination) {
         FINI = 3
     } etape = ENVOI_ORDRE;
 
-    while (etape != FINI) {
+//    while (etape != FINI) {
+    if (destination.x == RESET.x){   // RESET pour remettre la fonction à 0 si on a été coupé par un SHARP
+        etape = ENVOI_ORDRE;
+        statutAction = ACTION_FINIE;
+    }
+    else{
         switch (etape) {
             case ENVOI_ORDRE:       // 1: envoyer l'ordre à la propulsion
                 propulsionGotoxyalpha(destination);     // on envoie l'ordre de trajectoire
@@ -77,12 +111,17 @@ actionStatutType trajectoryBasicAction(positionInteger destination) {
                 }
                 break;
             case FINI:
+                if (!statutAction==ACTION_ERREUR){
+                statutAction = ACTION_FINIE;
+                }
+                etape = ENVOI_ORDRE;
                 break;
             default:
                 etape = ATTENTE_FIN_MOUVEMENT;
                 break;
         }
     }
+//    }
     return (statutAction);
 }
 

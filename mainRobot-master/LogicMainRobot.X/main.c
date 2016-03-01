@@ -82,7 +82,7 @@ int main(void) {
 	msTimerInit();                  // Initialisation du timer des millisecondes, n'est utilisé que pour waitXms (TODO: enlever en mêm temps que waitXms)
 
 	while(1) {
-        LED = detectionObstacleSharp().isObstacleDetected;
+ //       LED = detectionObstacleSharp().isObstacleDetected;
 		if (getMatchTimerFlag()) {
 			matchStatus = OVER;
 		}
@@ -93,30 +93,30 @@ int main(void) {
                     oldMatchStatus = matchStatus;
                     CanEnvoiProduction(&matchStatus);
                     matchTimerInit();				// Initialisation du timer de match
-                    initServoClap();
-                }
-                if (!GOUPILLE_OTEE) {
+//                    initServoClap();
+//                }
+//               if (!GOUPILLE_OTEE) {
                     matchStatus = PRE_MATCH;
-                }
+//                }
                 break;
 			case PRE_MATCH:             // Le robot attend le début du match. On peut encore choisir la couleur
                 if (matchStatus != oldMatchStatus) {
                     oldMatchStatus = matchStatus;
                     CanEnvoiProduction(&matchStatus);
                 }
-				if (BOUTON_EQUIPE == JAUNE) {
+/*				if (BOUTON_EQUIPE == JAUNE) {
 					equipe = JAUNE;
 					positionInitiale = positionInitialeJaune;
 					ordreActions = actionsJaune;
 					nbActions = NB_ACTIONS_JAUNE;
-				} else {
+				} else {*/
 					equipe = VERT;
 					positionInitiale = positionInitialeVert;
 					ordreActions = actionsVert;
 					nbActions = NB_ACTIONS_VERT;
-				}
+//				}
 				// TRANSITIONS
-				if (GOUPILLE_OTEE) {                                                        // si la goupille est retirée, le match commence
+//				if (GOUPILLE_OTEE) {                                                        // si la goupille est retirée, le match commence
 					StartMatchTimer();                                                      // on lance le timer de match (90s))
                     propulsionEnable();                                                     // on active la propulsion
                     while(propulsionGetStatus() != STANDING);                               // on attend que l'ordre soit exécuté
@@ -154,9 +154,9 @@ int main(void) {
                     CanEnvoiProduction(&matchStatus);
                     propulsionDisable();
                 }
-                if (!GOUPILLE_OTEE) {
-                    matchStatus = INIT;
-                }
+      //          if (!GOUPILLE_OTEE) {
+      //              matchStatus = INIT;
+      //          }
                 break;
             case ERROR:
                 if (matchStatus != oldMatchStatus) {
@@ -180,7 +180,7 @@ int main(void) {
         if (EnvoiSharpActif) {
             if (msTimerGet()-sharpLastTime >= 10) {
                 sharpLastTime = msTimerGet();
-                mesureSharp = sharpGetMesure();
+//                mesureSharp = sharpGetMesure();
                 CanEnvoiProduction(&mesureSharp);
             }
         }
@@ -212,8 +212,8 @@ actionType gestionErreur(actionType currentAction) {
             switch (propulsionGetStatus()) {
                 case STANDING:                          // si on est à l'arrêt et en erreur, ce doit être un obstacle (ou un patinage)
                     if (!compareXYAlpha(propulsionGetPosition(), infoAction.position)) {   // on n'est pas au bon endroit a priori
-                        nextAction = currentAction;                                         // on réessaye TODO ajouter la gestion d'obstacle
-                        nextAction.option = RESET_ACTION;
+                        nextAction = choixAction();                                         // on réessaye TODO ajouter la gestion d'obstacle
+ //                       nextAction.option = RESET_ACTION;
                     }
                     break;
                 case TRAJ_NO_WAY:                       // si on n'a pas trouvé de chemin, c'est qu'il y a un obstacle dans le chemin

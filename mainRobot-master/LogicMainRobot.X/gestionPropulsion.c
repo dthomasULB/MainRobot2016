@@ -20,7 +20,7 @@ void propulsionInitCan(void) {
     CanDeclarationProduction(CN_PROPULSION, (void*)&canOrdrePropulsion, sizeof(canOrdrePropulsion));
     CanDeclarationConsommation(CO_PROP_POS, (void*)&canCurrentPosition, sizeof(canCurrentPosition));
     CanDeclarationConsommation(CO_PROP_STATUS, (void*)&canEtatPosition, 1);
-    CanDeclarationConsommation(CO_PROP_PATINAGE, &canPropPatinage, sizeof(canPropPatinage));
+    CanDeclarationConsommation(CO_PROP_PATINAGE, (void*)&canPropPatinage, sizeof(canPropPatinage));
 }
 
 void propulsionEnable(void) {
@@ -70,7 +70,7 @@ void propulsionOrdre(char cmd, int data0, int data1 , int data2) {
     canOrdrePropulsion[4] = (unsigned char)( (data1>> 8) & 0x00FF );
     canOrdrePropulsion[5] = (unsigned char)( data2 & 0x00FF );
     canOrdrePropulsion[6] = (unsigned char)( (data2>> 8) & 0x00FF );
-    CanEnvoiProduction(canOrdrePropulsion);
+    CanEnvoiProduction((void*)canOrdrePropulsion);
 }
 
 

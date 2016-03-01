@@ -27,6 +27,7 @@
       <itemPath>2015_2.h</itemPath>
       <itemPath>canFnc.h</itemPath>
       <itemPath>Motors.h</itemPath>
+      <itemPath>test2_2016.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -229,6 +230,7 @@
         <property key="DAC 1" value="true"/>
         <property key="DUAL COMPARATOR" value="true"/>
         <property key="ECAN" value="true"/>
+        <property key="Freeze All Other Peripherals" value="true"/>
         <property key="I2C1" value="true"/>
         <property key="INPUT CAPTURE 1" value="true"/>
         <property key="INPUT CAPTURE 2" value="true"/>

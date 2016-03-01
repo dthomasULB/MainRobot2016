@@ -19,7 +19,7 @@
 #define NB_ACTIONS_JAUNE    (2)
 extern actionType actionsJaune[NB_ACTIONS_JAUNE];
 
-#define NB_ACTIONS_VERT    (1)
+#define NB_ACTIONS_VERT    (3)
 extern actionType actionsVert[NB_ACTIONS_VERT];
 
 

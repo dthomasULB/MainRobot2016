@@ -17,6 +17,29 @@ ppsStatus ppsOutConfig(ppsOutput periphOutput, int rpPin) {
 	if ((periphOutput < 1) || (periphOutput > 0x1B)) {
 		return PPS_PERIPH_ERROR;
 	}
+#elif defined(__dsPIC33EP256MU806__)
+    switch (rpPin) {
+		case 0:		RPOR0bits.RP64R  = periphOutput;	break;
+		case 1:		RPOR0bits.RP65R  = periphOutput;	break;
+		case 2:		RPOR1bits.RP66R  = periphOutput;	break;
+		case 3:		RPOR1bits.RP67R  = periphOutput;	break;
+		case 4:		RPOR2bits.RP68R  = periphOutput;	break;
+		case 5:		RPOR2bits.RP69R  = periphOutput;	break;
+		case 6:		RPOR3bits.RP70R  = periphOutput;	break;
+		case 7:		RPOR3bits.RP71R  = periphOutput;	break;
+		case 8:		RPOR4bits.RP79R  = periphOutput;	break;
+		case 9:		RPOR4bits.RP80R  = periphOutput;	break;
+		case 10:	RPOR5bits.RP82R = periphOutput;	break;
+		case 11:	RPOR5bits.RP84R = periphOutput;	break;
+		case 12:	RPOR6bits.RP85R = periphOutput;	break;
+		case 13:	RPOR6bits.RP87R = periphOutput;	break;
+		case 14:	RPOR7bits.RP96R = periphOutput;	break;
+		case 15:	RPOR7bits.RP97R = periphOutput;	break;
+        default:
+		return PPS_PIN_ERROR;
+		break;
+	}
+	return PPS_SUCCESS;
 #endif
 	switch (rpPin) {
 		case 0:		RPOR0bits.RP0R  = periphOutput;	break;
@@ -35,6 +58,7 @@ ppsStatus ppsOutConfig(ppsOutput periphOutput, int rpPin) {
 		case 13:	RPOR6bits.RP13R = periphOutput;	break;
 		case 14:	RPOR7bits.RP14R = periphOutput;	break;
 		case 15:	RPOR7bits.RP15R = periphOutput;	break;
+
 #if defined(__dsPIC33FJ128GP804__) ||defined(__dsPIC33FJ128MC804__)
 		case 16:	RPOR8bits.RP16R  = periphOutput;	break;
 		case 17:	RPOR8bits.RP17R  = periphOutput;	break;
