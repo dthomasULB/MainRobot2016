@@ -6,7 +6,7 @@
 volatile positionInteger canCurrentPosition;
 volatile char canOrdrePropulsion[7];
 volatile propStateType canEtatPosition;
-volatile char canPropPatinage;
+volatile propIsObstacleType canObs;
 
 //int patinage;
 void propulsionOrdre(char cmd, int data0, int data1 , int data2);
@@ -20,7 +20,8 @@ void propulsionInitCan(void) {
     CanDeclarationProduction(CN_PROPULSION, (void*)&canOrdrePropulsion, sizeof(canOrdrePropulsion));
     CanDeclarationConsommation(CO_PROP_POS, (void*)&canCurrentPosition, sizeof(canCurrentPosition));
     CanDeclarationConsommation(CO_PROP_STATUS, (void*)&canEtatPosition, 1);
-    CanDeclarationConsommation(CO_PROP_PATINAGE, (void*)&canPropPatinage, sizeof(canPropPatinage));
+    CanDeclarationConsommation(CO_PROP_IS_OBSTACLE,(void*)&canObs, 1);
+   // CanDeclarationConsommation(CO_PROP_PATINAGE, &patinage, sizeof(patinage));
 }
 
 void propulsionEnable(void) {
@@ -50,14 +51,28 @@ positionInteger propulsionGetPosition(void) {
  * @brief Renvoie l'état du module propulsion
  * @Details Le canEtatPosition est mis à jour dès que la propulsion le met sur le CAN
  */
+
 propStateType propulsionGetStatus(void) {
     propStateType tmp;
     
     ACTIVATE_CAN_INTERRUPTS = 0;
     tmp = canEtatPosition;
     ACTIVATE_CAN_INTERRUPTS = 1;
+
     return(tmp);
 }
+
+//Denis
+
+propIsObstacleType propulsionGetObstacle(void) {
+    propIsObstacleType tmp;
+
+    ACTIVATE_CAN_INTERRUPTS = 0;
+    tmp = canObs;
+    ACTIVATE_CAN_INTERRUPTS = 1;
+    return(tmp);
+}
+
 
 /**
  * @brief Ordre CAN générique à l'odométrie (fonction interne)
@@ -70,7 +85,7 @@ void propulsionOrdre(char cmd, int data0, int data1 , int data2) {
     canOrdrePropulsion[4] = (unsigned char)( (data1>> 8) & 0x00FF );
     canOrdrePropulsion[5] = (unsigned char)( data2 & 0x00FF );
     canOrdrePropulsion[6] = (unsigned char)( (data2>> 8) & 0x00FF );
-    CanEnvoiProduction((void*)canOrdrePropulsion);
+    CanEnvoiProduction(canOrdrePropulsion);
 }
 
 
@@ -94,13 +109,13 @@ void propulsionSetPosition(positionInteger pos) {
 }
 
 
+
 /**
  * @brief ordonne à la propulsion d'effectuer une translation à vitesse et
  * acceleration données
  */
-void propulsionTranslation(int acc, int vit, int dist) {
+void propulsionTranslation(int acc,int vit,int dist) {
     propulsionOrdre(PROP_TRANSLATION, acc, vit , dist);	// on envoie l'ordre
-	while(propulsionGetStatus() == STANDING);			// on attend que le mouvement ait commencé
 }
 
 /**
@@ -125,4 +140,17 @@ void propulsionGotoxyalpha(positionInteger pos) {
 
 void propulsionStopNow(void){
     propulsionOrdre(PROP_STOP_NOW, 0,0,0);
+}
+
+
+void propulsionAddObstacle( obstacleType detectionSharp){
+    propulsionOrdre(PROP_ADD_OBSTACLE, detectionSharp.x,detectionSharp.y,350);
+}
+
+void propulsionRemoveObstacle( obstacleType detectionSharp){
+    propulsionOrdre(PROP_REMOVE_OBSTACLE, detectionSharp.x,detectionSharp.y,350);
+}
+
+void propulsionIsObstacle( obstacleType detectionSharp){
+    propulsionOrdre(PROP_IS_OBSTACLE_IN_MAP, detectionSharp.x,detectionSharp.y,0);
 }

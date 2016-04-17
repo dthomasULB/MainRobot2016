@@ -13,23 +13,33 @@
 
 //! Fonction d'assignation des I/O. 
 void assignSPIO(void) {
+   /*
+    EN COMMENTAIRE EN TESTANT LE STEPPER
     // bouton choix d'équipe
-//    TRISCbits.TRISC2 = 1;
- //   AD1PCFGLbits.PCFG8 = 1;
+   
+    TRISCbits.TRISC2 = 1;
+    AD1PCFGLbits.PCFG8 = 1;
+    */
     // goupille de démarrage
- //   TRISCbits.TRISC3 = 1; 
-    // LED
- //   LED = 0;
-//    TRISCbits.TRISC1 = 0;
-//    AD1PCFGLbits.PCFG7 = 1;
+    AD1PCFGLbits.PCFG7 = 1;
+    TRISCbits.TRISC1 = 1;
+  /*
+    // SW WAKE
+    AD1PCFGLbits.PCFG6 = 1;
+    TRISCbits.TRISC0=0;
+*/
+
     // CAN 
+    ppsOutConfig(PPS_C1TX, 11);
+    ppsInConfig(PPS_IN_C1RX, 10);
     
-    //ppsOutConfig(PPS_C1TX, 11);    
-    //ppsInConfig(PPS_IN_C1RX, 10);
-    RPINR26bits.C1RXR = 10;
-    RPOR5bits.RP11R = PPS_C1TX;
+  
     
-    // Sortie pour le servo    
-   // ppsOutConfig(PPS_OC1, 7);
+    // Stepper
+      AD1PCFGL = 0xFFFF;
+    TRISCbits.TRISC0 = 0;
+    TRISCbits.TRISC1 = 0;
+    TRISCbits.TRISC2 = 0;
+    TRISCbits.TRISC3 = 0;
 }
 

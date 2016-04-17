@@ -17,4 +17,4 @@ int findTrajectoire(absolutePosType rpStart, absolutePosType rpEnd, absolutePosT
 
 void trajAddObstacle(obstacleType obstacle);
 void trajRemoveObstacle(obstacleType obstacle);
-propIsObstacleType trajIsObstacleInMap(absolutePosType rpPoint);
+propIsObstacleType trajIsObstacleInMap(obstacleType obstacle);//absolutePosType rpPoint);

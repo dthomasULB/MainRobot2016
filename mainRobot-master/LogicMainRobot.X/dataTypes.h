@@ -38,7 +38,7 @@ typedef enum {
     INIT_ETAPE = 2, //! Démarrage de l'étape à effectuer
     EXEC_ETAPE = 3, /*! Etape en cours. */
     IDLE = 4, /*! Aucune action en cours, le robot n'a rien à faire. */
-    ERR = 5 /*! Une erreur grave s'est produite. */
+    ERREUR = 5 /*! Une erreur grave s'est produite. */
 } generalStateMachine;
 
 
@@ -67,11 +67,20 @@ typedef struct {
 } infoActionType;
 
 //! Structure contenant une action stratégique.
+typedef enum {
+    AUCUNE_ACTION = 0, /** Rien de spécial à faire **/
+    ACTIONNEUR = 1, /** Besoin d'utiliser un actionneur */
+    ACTIONNEUR_ACTIF = 2,
+    ACTIONNEUR_RENTRER = 3,
+    PINCE = 4, /** Besoin de la pince */
+    CAPTEUR_DISTANCE = 5, /**Besoin d'un capteur  */ 
+    CAPTEUR_COULEUR=6, /*Besoin d'un capteur de couleur*/
+    CAPTEUR_FORME=7
+} technique;
 
-typedef struct {
-    int option;
-    infoActionType(*ptr2Fct)(int); /** Pointeur vers la fonction d'exécution de l'action. */
-} actionType;
+
+
+
 
 
 //! Ordre pour la trajectoire.
@@ -91,4 +100,97 @@ typedef struct {
 } ordreMvtProp;
 
 
+// DENIS 2016
+
+typedef enum {
+    CYLINDRE = 0, 
+    CONE = 1, 
+    CUBE = 2, 
+    POISSON = 3,
+} objetForme;
+
+typedef enum {
+    AUCUNE = 0,
+    BLANC = 1, 
+    NOIR = 2, 
+    AUTRE = 3, 
+} objetCouleur;
+
+typedef struct {
+    float dist; 
+    objetForme forme;
+    objetCouleur couleur;
+} infoObjet;
+
+typedef enum {
+    A_FAIRE = 0, /** action à résoudre **/
+    REPORTEE = 1, /** problème / obstacle */
+    FAITE = 2, /** faite faut plus y toucher */
+    NO_TRAJECT=3, /* trouve pas de trajet pour la faire*/
+} StatusTache;
+
+typedef struct {
+    positionInteger dest;
+    technique methode;
+    infoActionType(*ptr2Fct)(positionInteger,technique); /** Pointeur vers la fonction d'exécution de l'action. */
+    StatusTache done;
+} actionType;
+
+typedef struct {
+    int numAction;
+    float point;
+    StatusTache done;
+    actionType* action;//(*ptr2act)(positionInteger,technique,infoActionType);
+}actionPossible ;
+
+typedef struct {
+    int quantite; 
+    objetForme forme;
+    objetCouleur couleur;
+} ObjetStock;
+
+typedef enum {
+    UNINITIALISED = 0,
+    MODE_COMMAND = 1,
+    NOT_CONNECTED = 2,
+    CONNECTED = 3,
+    MLDP=4
+} StatutsRadio;
+
+typedef enum {
+    AOK = 0,
+    CMD = 1,
+    REBOOT = 2,
+    CONNECTED_BLE = 3,
+    ERR = 4,
+    END = 5,
+    MLDP_BLE=6
+}DectectedReponse;
+
+typedef enum {
+    TASK_ACTION = 0,
+    POSITION_ALLY = 1,
+    OTHER = 2,
+}update;
+
+typedef struct {
+int Pince;
+int Decteur_couleur;
+int Aimant;					// mettre tout les actionneurs disponibles sur les robots
+int Pelle;
+}actionneurs;
+
+
+typedef struct {
+    int id;
+    positionInteger position;			// position du robot
+    actionneurs actionneur;				// Actionneur dispo sur le robot
+    int Tache;							// Tache en cours
+    int Action;							// Action en cours
+    int OBST;                           // si obstacle vu ou pas
+    int ERROR;                          // c'est la meeeeerde !
+} infoRotbot;
+
+
 #endif
+

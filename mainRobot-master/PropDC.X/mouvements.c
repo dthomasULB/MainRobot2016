@@ -38,21 +38,24 @@ void stopNow(void) {
 	vel = csgGetVel();
 	acc = csgGetNomAcc();
 	pos = csgGetPos();
+
+        // Denis: exclusion du cas 0 qui est problématique 17/12/2015
+    // *2 en plus sur l'acc pour freiner plus vite
 	if (vel.l >0) {
-		pos.l += vel.l*vel.l/(2*acc.l);
-	} else{
-		pos.l -= vel.l*vel.l/(2*acc.l);
+		pos.l += vel.l*vel.l/(3*2*acc.l);
+	} else if(vel.l < 0){
+		pos.l -= vel.l*vel.l/(3*2*acc.l);
 	}
 	if (vel.r >0) {
-		pos.r += vel.r*vel.r/(2*acc.r);
-	} else{
-		pos.r -= vel.r*vel.r/(2*acc.r);
+		pos.r += vel.r*vel.r/(3*2*acc.r);
+	} else if(vel.r < 0){
+		pos.r -= vel.r*vel.r/(3*2*acc.r);
 	}
 	csgSetFinalPos(pos);
 }
 
 
-relativePosType calcSegment(absolutePosType curPos, absolutePosType newPos) {
+relativePosType calcSegment(absolutePosType curPos, absolutePosType newPos, int backward) {
 	float x, y;
 	 relativePosType seg;
 
@@ -60,5 +63,12 @@ relativePosType calcSegment(absolutePosType curPos, absolutePosType newPos) {
 	y = newPos.y - curPos.y;
 	seg.l = sqrt(x*x + y*y);
 	seg.r = satureAngle(atan2(y, x) - curPos.alpha);
+    if (backward ==1){
+        seg.l=-seg.l;
+        seg.r = seg.r - PI;
+        while (seg.r > PI){seg.r -= 2*PI;}
+        while (seg.r < -PI){seg.r += 2*PI;}
+    }
 	return(seg);
 }
+

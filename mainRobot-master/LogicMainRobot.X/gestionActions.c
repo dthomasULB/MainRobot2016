@@ -18,20 +18,20 @@ const positionInteger clap1EndPos = {400, 150, 0};
 const positionInteger clap2StartPos = {740, 150, -900};
 const positionInteger clap2EndPos = {900, 150, 900};
 */
-
+/*
 const positionInteger StartDuneV = {1800, 1800, 1800};
 const positionInteger EndDuneV = {1200, 1800, -900};
 const positionInteger ConstructZoneV = {1650, 1100, 1800};
 
 
-
+infoActionType retourVertFct(int option);
 infoActionType demarrageJauneFct(int option);
 infoActionType demarrageVertFct(int option);
 infoActionType retourVertFct(int option);
 infoActionType TestArriere(int option);
 
 actionType actionsJaune[NB_ACTIONS_JAUNE] = {{DEFAULT_ACTION, demarrageJauneFct}};
-actionType actionsVert[NB_ACTIONS_VERT] = {{DEFAULT_ACTION, demarrageVertFct},{DEFAULT_ACTION, TestArriere},{DEFAULT_ACTION, retourVertFct}};
+actionType actionsVert[NB_ACTIONS_VERT] = {{DEFAULT_ACTION, retourVertFct}};
 
 
 infoActionType demarrageJauneFct(int option) {
@@ -43,7 +43,7 @@ infoActionType demarrageJauneFct(int option) {
 
 infoActionType TestArriere(int option) {
     static infoActionType infoAction = {ACTION_PAS_COMMENCEE, 0, 1, ACTION_TRAJECTOIRE, {0, 0, 0}};
-    infoAction.statut = translationBasicAction(1000, 1000, -400);
+    infoAction.statut = translationBasicAction(10, 10, -100);
     return (infoAction);
 }
 
@@ -122,4 +122,4 @@ infoActionType retourVertFct(int option) {
   static infoActionType infoAction = {ACTION_PAS_COMMENCEE, 0, 1, ACTION_TRAJECTOIRE, {2500, 1700, 1800}};
    infoAction.statut = trajectoryBasicAction(infoAction.position);
     return (infoAction);
-}
+}*/

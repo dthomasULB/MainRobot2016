@@ -5,7 +5,7 @@
 #include "../libdspic/timers.h"
 #include <xc.h>
 
-
+#define PWM_MAX		399	//(PWM_PERIOD*99)/100
 #define PWM_PERIOD	50E-3	// période de la pwm, en  ms
 // limitation du DC max nécessaire pour les bootstraps du driver
 #define MAX_DC		1980
@@ -75,6 +75,8 @@ void motorsDisable(void) {
 
 
 void motorsSetSpeed(float dcR, float dcL) {
+
+
 	if (dcR > 0) {
 		pwmSetDutyCycle(PWM_R1, dcR);
 		pwmSetDutyCycle(PWM_R2, 0);

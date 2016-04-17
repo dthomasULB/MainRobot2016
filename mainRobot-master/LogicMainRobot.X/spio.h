@@ -14,9 +14,8 @@
 //! Définition de la pin du bouton de choix d'équipe. 
 #define BOUTON_EQUIPE   (PORTCbits.RC2)
 //! Définition de la pin de la goupille de démarrage. 
-#define GOUPILLE_OTEE   (PORTCbits.RC3)
+#define GOUPILLE_OTEE   (PORTCbits.RC1)
 
-#define LED             (LATCbits.LATC1)
 
 void assignSPIO(void); 
 

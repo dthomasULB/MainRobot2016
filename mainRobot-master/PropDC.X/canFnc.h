@@ -23,6 +23,6 @@ void canSendPos(absolutePosType curPos);
 void canSendRelCsg(relativePosType curPos);
 void canSendRelPos(relativePosType curPos);
 void canSendIsObstacle(propIsObstacleType isObstacle);
-
+void canSendObstacleType(propIsObstacleType obstacle);
 #endif	/* CANFNC_H */
 

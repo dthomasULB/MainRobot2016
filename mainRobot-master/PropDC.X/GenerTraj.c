@@ -389,19 +389,25 @@ inline int convertPath(absolutePosType rpStart, absolutePosType rpEnd, int pathS
     return (length);
 }
 
-propIsObstacleType trajIsObstacleInMap(absolutePosType rpPoint) {
-    mapPosType mpPoint;
 
-    mpPoint = RPtoMP(rpPoint);
-    if (initialMap[MAP_SIZE_B * mpPoint.a + mpPoint.b] == OBST) {
+propIsObstacleType trajIsObstacleInMap(obstacleType obstacle){//(absolutePosType rpPoint) {
+    mapPosType mpPoint;
+    // ADD 15/12/2015 Denis
+    absolutePosType tmp;
+    tmp.x = obstacle.x;         // on calcule les coordonnées de l'obstacle dans la carte
+    tmp.y = obstacle.y;
+    mpPoint = RPtoMP(tmp);
+    // Calqué sur la fonction ADD et SUBobstacle
+ //   mpPoint = RPtoMP(rpPoint);
+    if ((initialMap[MAP_SIZE_B * mpPoint.a + mpPoint.b] == OBST || 30 < mpPoint.a) || 20 < mpPoint.b) {
         return (PROP_IS_UNREMOVABLE_OBSTACLE);
     } else if (initialMap[MAP_SIZE_B * mpPoint.a + mpPoint.b] == MOVE_OBST) {
         return (PROP_IS_REMOVABLE_OBSTACLE);
     } else {
         return (PROP_IS_NO_OBSTACLE);
     }
+    
 }
-
 // calcule la trajectoire ooptimale pour aller du point rpStart au point rpEnd,
 // en tenant compte des obstacles sur la table. La carte de la table doit être
 // initialisée et les obstacles éventuels ajoutés avant d'appeler cette fonction.

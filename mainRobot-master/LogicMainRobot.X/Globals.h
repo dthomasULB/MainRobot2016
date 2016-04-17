@@ -15,7 +15,7 @@
 #define MIN(a, b)   (((a) > (b)) ? (a) : (b))
 #define ABS(a)		(((a) < 0) ? -(a) : (a))
 #define SIGN(a)		(((a) < 0) ? -1 : 1)
-
+#define DEG2RAD(x) (x*(PI/1800))
 
 #endif	/* GLOBALS_H */
 

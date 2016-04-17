@@ -113,7 +113,10 @@ csgStatusType csgCompute(void) {
 	if (tmp <= prMinDist.l) {			// si a distance qu'il reste a parcourir est négligeable
 		prCsgVel.l = 0;
 		prCsgPos.l = prCsgFinalPos.l;
-	} else {
+	}
+
+    else {
+
 		state = CSG_MOVING;
 		sqrVel = prCsgVel.l*prCsgVel.l;
 		tmp = prCsgPos.l + prCsgVel.l*TS + SIGN(prCsgVel.l)*sqrVel/(2*prCsgNomAcc.l);

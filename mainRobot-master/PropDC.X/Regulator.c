@@ -31,11 +31,13 @@ regType regCompute(void) {
 	float errT, errR, errVt, errVr;
 	float dcTrans, dcRot, dcLeft, dcRight;
 
+
 	// On calcule les erreurs
 	errT = csgPos.l - odoPos.l;
 	errR = csgPos.r - odoPos.r;
 	errVt = csgVel.l - odoVel.l;
 	errVr = csgVel.r - odoVel.r;
+
 	// on calcule la sortie des rÈgulateurs de vitesse
 	dcTrans = KP_T*errT + KV_T*errVt;
 	dcRot = KP_R*errR + KV_R*errVr;
@@ -43,6 +45,7 @@ regType regCompute(void) {
 	// et ceux en droite/gauche
 	dcRight = dcTrans + dcRot;
 	dcLeft = dcTrans - dcRot;
+
 	// on limite la variation des rapports cycliques
 	if ((dcRight - prRegOldDcRight) > DC_MAX_DELTA) {
 		dcRight = prRegOldDcRight + DC_MAX_DELTA;

@@ -11,7 +11,8 @@
 #include <xc.h>
 #include <math.h>
 
-
+// ODO A L ENVERS
+// dcRight devient négatif quand il devrait pas car dcRot est trop grand trouver pq
 #define DBG_PIN0	(LATCbits.LATC5)            // pattes de debug pour mesurer des temps d'exécution
 #define DBG_PIN1	(LATBbits.LATB5)
 
@@ -53,10 +54,7 @@ int main(void) {
     absolutePosType finalPos;               //!< position finale du mouvement
     relativePosType segment;                //!< contient les paramètres du prochain segment à parcourir
     absolutePosType path[15];               //!< Contient les points de passage de la trajectoire
-    propIsObstacleType obstacle;             // on définit une variable obstacle permettant l'interrogation de la logique
-    // DENIS 02/03/2016
     int patinageEnable = 0;
-    int backward = 0;                       // Variable permettant de faire des trajet en arrière
     int curSeg, nbSeg;
     enum {
         XY,
@@ -123,8 +121,7 @@ int main(void) {
                             trajRemoveObstacle(canOrderGetObstacle());
                             break;
                         case PROP_IS_OBSTACLE_IN_MAP:
-                            obstacle = trajIsObstacleInMap(canOrderGetObstacle());
-                            canSendObstacleType(obstacle);
+                            canSendIsObstacle(trajIsObstacleInMap(canOrderGetPos()));
                             break;
                     }
                     canReceivedOrderFlag = 0;
@@ -161,21 +158,12 @@ int main(void) {
                         case PROP_GOTO_XY:
                         case PROP_GOTO_XYALPHA:
                             DBG_PIN0 = 1;
-                            backward = 0;
                             disableIsrTimer1();
                             curPos = odoGetAbsPos();
                             enableIsrTimer1();
                             finalPos = canOrderGetPos();
-                            
-                            // DENIS 02/03/2016
-                            if (finalPos.x < 0) {
-                               finalPos.x = -finalPos.x;
-                               finalPos.y = -finalPos.y;
-                               finalPos.alpha = -finalPos.alpha; 
-                               backward = 1;
-                            } 
                             nbSeg = findTrajectoire(curPos, finalPos, path);
-                            if ( 249 < nbSeg) {
+                            if (nbSeg < 0) {
                                 state = nbSeg;
                             } else if (nbSeg == 0) {
                                 state = STANDING;
@@ -206,13 +194,11 @@ int main(void) {
                         case PROP_ADD_OBSTACLE:
                             trajAddObstacle(canOrderGetObstacle());
                             break;
-                            //15/12/2015
                         case PROP_REMOVE_OBSTACLE:
                             trajRemoveObstacle(canOrderGetObstacle());
-                        break;
+                            break;
                         case PROP_IS_OBSTACLE_IN_MAP:
-                            obstacle = trajIsObstacleInMap(canOrderGetObstacle());
-                            canSendObstacleType(obstacle);
+                            canSendIsObstacle(trajIsObstacleInMap(canOrderGetPos()));
                             break;
                     }
                     canReceivedOrderFlag = 0;
@@ -250,18 +236,6 @@ int main(void) {
                         case PROP_PATINAGE_ON_OFF:
                             patinageEnable = canGetPatinageEnable();
                             break;
-                            //15/12/2015
-                      case PROP_IS_OBSTACLE_IN_MAP:
-                            obstacle = trajIsObstacleInMap(canOrderGetObstacle());
-                            canSendObstacleType(obstacle);
-                            break;
-                            //Denis
-                      case PROP_ADD_OBSTACLE:
-                            trajAddObstacle(canOrderGetObstacle());
-                            break;
-                      case PROP_REMOVE_OBSTACLE:
-                            trajRemoveObstacle(canOrderGetObstacle());
-                        break;      
                     }
                     canReceivedOrderFlag = 0;
                 }
@@ -299,20 +273,7 @@ int main(void) {
                         case PROP_PATINAGE_ON_OFF:
                             patinageEnable = canGetPatinageEnable();
                             break;
-                                                      //15/12/2015
-                      case PROP_IS_OBSTACLE_IN_MAP:
-                            obstacle=trajIsObstacleInMap(canOrderGetObstacle());
-                            canSendObstacleType(obstacle);
-                            break;
-                            //Denis
-                     case PROP_ADD_OBSTACLE:
-                            trajAddObstacle(canOrderGetObstacle());
-                            break;
-                     case PROP_REMOVE_OBSTACLE:
-                            trajRemoveObstacle(canOrderGetObstacle());
-                        break;
                     }
-
                     canReceivedOrderFlag = 0;
                 }
                 switch (trajectorySubState) {
@@ -322,8 +283,9 @@ int main(void) {
                             disableIsrTimer1();
                             curPos = odoGetAbsPos();
                             enableIsrTimer1();
-                            segment = calcSegment(curPos, path[curSeg+1], backward);
+                            segment = calcSegment(curPos, path[curSeg+1]);
                             if (segment.r != 0) {       // si il y a une rotation à faire
+                                //DENIS
                                 rotationParam.angle = segment.r;
                                 disableIsrTimer1();
                                 addRotation(rotationParam);
@@ -382,7 +344,6 @@ int main(void) {
                 break;
             case TEST:
                 if (state != oldState) {                    // Actions d'entrée
-                    motorsEnable();
                     oldState = state;
                     canSendState(state);
                 }
@@ -392,6 +353,7 @@ int main(void) {
                             state = DISABLED;
                             break;
                         case PROP_SET_DUTY_CYCLE:
+                            motorsEnable();
                             disableIsrTimer1();
                             motorsSetSpeed(canReceivedData[0] / 100.0, canReceivedData[1] / 100.0);
                             enableIsrTimer1();
@@ -425,7 +387,6 @@ int main(void) {
                 break;
 
             default:
-                state = STANDING;
                 break;
         }
     }

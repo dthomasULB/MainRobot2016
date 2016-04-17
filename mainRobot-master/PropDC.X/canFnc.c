@@ -27,7 +27,7 @@ propStateType canState;                             //!< Etat de la propulsion
 relativeCoordInteger canOdoRelPos, canCsgRelPos;    //!< position et consigne dans les coordonnées relatives (mm et deg/10)
 char canPatinage = 1;
 propIsObstacleType canIsObstacle;
-
+propIsObstacleType canObsType;  
 
 
 
@@ -139,4 +139,8 @@ rotationParamType canGetRotation(void) {
 	param.angle = DEG10_TO_RAD*tempINTEG.i;
 
     return(param);
+}
+void canSendObstacleType(propIsObstacleType obstacle) {
+    canObsType = obstacle;
+    CanEnvoiProduction(&canObsType);
 }
